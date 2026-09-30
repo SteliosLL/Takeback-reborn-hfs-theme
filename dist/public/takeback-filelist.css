@@ -55,67 +55,130 @@
     color: green;
     animation: blinkgreen 5s ease-in-out 0s infinite;
 }
+
+
+
+/* 1. Header fixes */
 .part1 {
-    width: 100%;
-    overflow-x: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2px;
+    padding: 0;
+    height: 28px;
+    box-sizing: border-box;
+    background-color: transparent !important;
+    color: #000000;
+    font-weight: bold;
+    
+    /* Moves only the header visually up without touching surrounding elements */
+    position: relative;
+    top: -1px; 
 }
-.part1 table#files {
-    min-width: 75%;
-    margin: auto;
+
+/* Individual white header boxes */
+.part1 a,
+.part1 a.invert {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    text-decoration: none;
+    box-shadow: none;
+    outline: none;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.part1 a[href*="sort=n"] {
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+.part1 a[href*="sort=!t"] {
+    justify-content: flex-end;
     white-space: nowrap;
 }
-.part1 table#files td:nth-child(1) {
-    width: 75%;
-    text-align: left;
-}
-.part1 table#files td:nth-child(1) img.thumb {
-    height: 8em;
-    vertical-align: middle;
-}
-.part1 table#files td:nth-child(2) {
-    width: 15%;
-    text-align: center;
-}
-.part1 table#files td:nth-child(3) {
-    width: 10%;
-    text-align: right;
-}
-.part1 table#files thead td:nth-child(3) {
-    text-align: center;
-}
-.part1 table#files thead td {
-    background-color: white;
-    color: #333333;
-    font-weight: bold;
-}
-.part1 table#files thead td a:hover {
-    color: #333333;
-}
-.part1 table#files tbody tr {
-    outline: 1px solid transparent;
-    transition: all 0.3s;
-}
-.part1 table#files tbody tr p {
+/* 2. Folder list fixes: prevent menu button overlap */
+ul.dir {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    margin-left: 1em;
-    border-left: 1px solid white;
-    padding-left: 1em;
 }
-.part1 table#files tbody tr:hover {
-    outline: 1px solid currentColor;
+
+ul.dir li.folder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
 }
-.part1 table#files tbody tr.selected {
-    outline: 1px solid yellow;
+
+/* Ensure link-wrapper uses inline-flex so items sit side-by-side */
+ul.dir li.folder .link-wrapper {
+    flex-grow: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Gap between folder name and menu button */
+    overflow: hidden;
 }
-.part1 table#files .folder td:nth-child(3),
-.part1 table#files .link td:nth-child(3) {
-    color: gray;
-    font-style: italic;
-    text-align: center;
+
+/* Ensure folder link layout stays inline */
+ul.dir li.folder .link-wrapper > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: inherit;
+    white-space: nowrap;
 }
-.part1 table#files tr td {
-    height: 32px;
+
+/* Keep the popup button inline instead of breaking/overlapping */
+ul.dir li.folder .popup-menu-button {
+    position: static; /* Restores flow in case absolute positioning was breaking it */
+    flex-shrink: 0;
 }
+
+ul.dir li.folder .entry-panel {
+    text-align: right;
+    white-space: nowrap;
+    margin-left: 12px;
+}
+
+/* Sharp rectangle outline on row hover */
+ul.dir li.folder:hover {
+    background-color: transparent;
+    outline: 2px solid #ffffff;
+    outline-offset: -2px;
+}
+
+/* Keep sharp outline when hovering the row */
+ul.dir li.folder:hover {
+    background-color: transparent;
+    outline: 2px solid #ffffff;
+    outline-offset: -2px;
+}
+
+/* Make text visible (black) when hovering directly over the link with the white background */
+ul.dir li.folder a:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important; /* Changes text to black so it shows over the white box */
+}
+
+/* Default folder link color outside direct hover */
+ul.dir li.folder a {
+    color: #ffffff;
+}
+
+/* Keep secondary text white on row hover */
+ul.dir li.folder:hover .entry-ts,
+ul.dir li.folder:hover .popup-menu-button {
+    color: #ffffff;
+}
+
+
+
+
 .part2 .blank {
     height: 20em;
 }
@@ -164,6 +227,17 @@
 .part3 .right #preview a.download span {
     color: cyan;
 }
+
+
+
+
+
+
+
+
+
+
+
 .slideshow {
     position: fixed;
     top: 0;

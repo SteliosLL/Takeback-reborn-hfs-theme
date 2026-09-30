@@ -255,7 +255,6 @@ input.takeback-textbox:focus-visible {
 
 
 
-/* Apply the exact a.invert styles to HFS3's dialog close button */
 .dialog-closer,
 :root .dialog-closer,
 :root .theme-dark .dialog-closer {
@@ -269,8 +268,9 @@ input.takeback-textbox:focus-visible {
     
     /* Size adjustments */
     font-size: 1.1em !important;
-    padding: 0.2em 0.5em !important;
-    min-width: 1.5em !important;
+    padding: 0 !important;
+    width: 1.2em !important;
+    min-width: 1.2em !important;
     height: 1.5em !important;
     box-sizing: border-box !important;
     
@@ -281,46 +281,50 @@ input.takeback-textbox:focus-visible {
     /* Reset default image/hiding properties */
     background-image: none !important;
     text-indent: 0 !important;
-    white-space: normal !important;
+    white-space: nowrap !important;
     overflow: visible !important;
     cursor: pointer !important;
 
-    /* Base a.invert styling */
-    color: #333333 !important;
-    background-color: white !important;
-    border: 1px solid transparent !important;
+    /* Base state: Red text, transparent background, no border */
+    color: #ff6666 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
     text-decoration: none !important;
-    transition: all 0.3s !important;
+    transition: all 0.2s ease !important;
     font-family: inherit !important;
+    font-weight: bold !important;
     line-height: 1 !important;
 }
-
-/* Insert the "X" text inside the button */
-.dialog-closer::before {
-    display: inline-block;
-    font-weight: bold;
-}
-
-/* Hover state: a.invert:hover */
+/* Hover state: White background */
 .dialog-closer:hover,
 :root .dialog-closer:hover,
 :root .theme-dark .dialog-closer:hover {
-    color: white !important;
-    background: transparent !important;
-    background-color: transparent !important;
-    border: 1px solid currentColor !important;
+    color: #ff6666 !important;
+    background: white !important;
+    background-color: white !important;
+    border: none !important;
 }
 
-/* Active state: a.invert:active */
+/* Active state */
 .dialog-closer:active,
 :root .dialog-closer:active,
 :root .theme-dark .dialog-closer:active {
-    color: white !important;
-    background: transparent !important;
-    background-color: transparent !important;
-    border: 1px solid transparent !important;
-    text-shadow: 0 0 4px white !important;
+    color: #cc0000 !important;
+    background: #e5e5e5 !important;
+    background-color: #e5e5e5 !important;
+    border: none !important;
+    text-shadow: none !important;
 }
+
+
+
+
+
+
+
+
+
 
 .dialog-icon {
     background-color: transparent !important;
@@ -355,11 +359,13 @@ button {
 }
 
 /* Hover state (Flips to transparent background, white text + border) */
-button:hover {
-    color: white !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    border: 1px solid currentColor !important;
+button:hover,
+.toggled {
+  color: white !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 1px solid currentColor !important;
+  text-shadow: none !important;
 }
 
 /* Active/click state */
@@ -369,6 +375,9 @@ button:active {
     background-image: none !important;
     text-shadow: 0 0 4px white !important;
 }
+
+
+
 
 /* 1. Standard / Firefox syntax */
 * {
@@ -452,4 +461,9 @@ input[type="checkbox"]:hover {
 input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--focus-color, #fff) !important;
   outline-offset: 2px !important;
+}
+
+#admin-link {
+  all: unset !important;
+  cursor: pointer !important; /* Optional: restores pointer cursor if it's a clickable element/button */
 }
