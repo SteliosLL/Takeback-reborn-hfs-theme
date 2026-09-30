@@ -13,7 +13,7 @@ function injectCustomElements() {
 			});
 		}
 
-		function stripZipLinks(container = document) {
+		function stripLinks(container = document) {
 			if (!container.querySelectorAll) return;
 
 			container.querySelectorAll('a[href="?get=zip"]').forEach((a) => {
@@ -25,6 +25,26 @@ function injectCustomElements() {
 					a.style.cssText = 'all: unset !important; cursor: pointer !important;';
 				}
 			});
+		}
+
+		function formatDialogClosers(container) {
+			if (!container || !container.querySelectorAll) return;
+
+			const selector = '.dialog-closer';
+
+			const updateText = (btn) => {
+				if (btn.textContent !== '[X]') {
+					btn.textContent = '[X]';
+				}
+			};
+
+			// Check container itself
+			if (container.matches?.(selector)) {
+				updateText(container);
+			}
+
+			// Check descendants
+			container.querySelectorAll(selector).forEach(updateText);
 		}
         const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
@@ -53,9 +73,7 @@ function injectCustomElements() {
 			mutation.addedNodes.forEach((node) => {
 				if (node.nodeType === Node.ELEMENT_NODE) {
 					// Exclude checkboxes/radios explicitly when checking node matches directly
-					const isTextInput = node.matches?.('input') && 
-										node.type !== 'checkbox' && 
-										node.type !== 'radio';
+					const isTextInput = node.matches?.('input') && 	node.type !== 'checkbox' && node.type !== 'radio';
 
 					if (node.matches?.('div.field')) {
 						const input = node.querySelector('input:not([type="checkbox"]):not([type="radio"])');
@@ -73,12 +91,14 @@ function injectCustomElements() {
 					// --- Subtree Processing ---
 					if (node.querySelectorAll) {
 						processFieldInputs(node);
-						stripZipLinks(node);
+						stripLinks(node);
+						formatDialogClosers(node);
 					}
 					
 					setTimeout(() => {
 						processFieldInputs(node);
-						stripZipLinks(node);
+						stripLinks(node);
+						formatDialogClosers(node);
 					}, 0);
 				}
 			});
@@ -144,94 +164,90 @@ function injectCustomElements() {
 			document.body.insertBefore(headerSection, document.body.firstChild);
 		}
 
+	// --- Inject .part1 early (hidden) so HFS binds native tooltip handlers ---
+	if (!document.querySelector('.part1')) {
+		const part1Section = document.createElement('section');
+		part1Section.className = 'part1';
+		part1Section.style.display = 'none'; // Keep hidden until relocated
+		part1Section.innerHTML = `
+			<a class="invert" href="./?sort=e" data-tooltip="Click to sort files by extension">&nbsp;🔷</a>
+			<a class="invert" href="./?sort=n" data-tooltip="Click to sort files by name">Item</a>
+			<a id="showthumb" class="invert" href="javascript:" data-tooltip="Show thumbnails of photos" style="display: none; margin-left: 2em;">📸 Photo Thumbnails</a>
+			<a class="invert" href="./?sort=!t" data-tooltip="Click to sort files by time">Last Modified</a>
+		`;
+		document.body.appendChild(part1Section);
+	}
+
 	// 2. Watch for future DOM changes and remove it as soon as it appears
 	let zipBtnObserved = false;
 	let searchBtnObserved = false;
 	let uploadBtnObserved = false;
 	let loginBtnObserved = false;
+	let listWrapperObserved = false;
 	let observeCounter = 0;
 	const obs = new MutationObserver(() => {
-	  const ZipBtn = document.getElementById('zip-button');
-	  const SearchBtn = document.getElementById('search-button');
-	  const uploadBtn = document.getElementById('upload-button');
-	  const loginBtn = document.getElementById('login-button');
+		const ZipBtn = document.getElementById('zip-button');
+		const SearchBtn = document.getElementById('search-button');
+		const uploadBtn = document.getElementById('upload-button');
+		const loginBtn = document.getElementById('login-button');
+		// --- Move early-injected .part1 into place ---
+		const part1Section = document.querySelector('.part1');
+		const listWrapperElement = document.querySelector('.list-wrapper');
 
-	  
-	  if (ZipBtn && !zipBtnObserved) {
-		zipBtnObserved = true;
-		observeCounter++;
-		
-		//originalZipBtn.id = 'original-hidden-zip-button';
-		ZipBtn.style.display = 'none';
-	  }
-	  if (SearchBtn && !searchBtnObserved) {
-		searchBtnObserved = true;
-		observeCounter++;
-		
-		//originalSearchBtn.id = 'original-hidden-search-button';
-		SearchBtn.style.display = 'none';
-	  }
-	  if (uploadBtn && !uploadBtnObserved) {
-		uploadBtnObserved = true;
-		observeCounter++;
-		
-		uploadBtn.style.display = 'none';
-	  }
-	   if (loginBtn && !loginBtnObserved) {
-		loginBtnObserved = true;
-		observeCounter++;
-		
-		loginBtn.style.display = 'none';
-	  }
-	  
+		if (part1Section && listWrapperElement && !listWrapperObserved) {
+			listWrapperObserved = true;
+			// Re-parent node into .list-wrapper (preserves event listeners)
+			listWrapperElement.insertBefore(part1Section, listWrapperElement.firstChild);
+			part1Section.style.display = ''; // Reveal header in its final spot
+		}
 
-	  //We are clear to inject our own html
-	  if (observeCounter === 4)
-	  {		  
-		obs.disconnect();
+		
+		if (ZipBtn && !zipBtnObserved) {
+			zipBtnObserved = true;
+			observeCounter++;
+			
+			//originalZipBtn.id = 'original-hidden-zip-button';
+			ZipBtn.style.display = 'none';
+		}
+		if (SearchBtn && !searchBtnObserved) {
+			searchBtnObserved = true;
+			observeCounter++;
+			
+			//originalSearchBtn.id = 'original-hidden-search-button';
+			SearchBtn.style.display = 'none';
+		}
+		if (uploadBtn && !uploadBtnObserved) {
+			uploadBtnObserved = true;
+			observeCounter++;
+			
+			uploadBtn.style.display = 'none';
+		}
+		if (loginBtn && !loginBtnObserved) {
+			loginBtnObserved = true;
+			observeCounter++;
+			
+			loginBtn.style.display = 'none';
+		}
+		
 
-		//Reposition the breacrumbs header
-		const targetAnchor = document.getElementById('breadcrumbs-header-spot');
-		const sourceAnchor = document.getElementById('breadcrumb-home');
-		if (sourceAnchor && targetAnchor) {
-			const headerElement = sourceAnchor?.closest('header');
+		//WE'RE CLEAR!
+		if (observeCounter === 4)
+		{		  
+			obs.disconnect();
 
-			if (headerElement) {
-				headerElement.id = 'breadcrumbs-header';
-				targetAnchor.replaceWith(headerElement);
+			//Reposition the breacrumbs header
+			const targetAnchor = document.getElementById('breadcrumbs-header-spot');
+			const sourceAnchor = document.getElementById('breadcrumb-home');
+			if (sourceAnchor && targetAnchor) {
+				const headerElement = sourceAnchor?.closest('header');
+
+				if (headerElement) {
+					headerElement.id = 'breadcrumbs-header';
+					targetAnchor.replaceWith(headerElement);
+				}
 			}
-		}
+			
 
-		const targetElement = document.querySelector('.list-wrapper');
-		if (targetElement) {
-		targetElement.insertAdjacentHTML('afterbegin', `
-				<section class="part1">
-					<thead>
-					<tr>
-						<td>
-							<a class="invert" href="./?sort=e" data-tooltip="Click to sort files by extension">&nbsp;🔷</a>
-							<a class="invert" href="./?sort=n" data-tooltip="Click to sort files by name">
-								Item (1)
-							</a>
-							<a id="showthumb" class="invert" href="javascript:" data-tooltip="Show thumbnails of photos" style="display: none; margin-left: 2em;">
-								📸 Photo Thumbnails
-							</a>
-						</td>
-						<td>
-							<a class="invert" href="./?sort=!t" data-tooltip="Click to sort files by time [ Format:mm/dd/yyyy ]">
-								Last Modified
-							</a>
-						</td>
-						<td>
-							<a class="invert" href="./?sort=s" data-tooltip="Click to sort files by size">
-								Size
-							</a>
-						</td>
-					</tr>
-				</thead>
-			</section>
-		`);
-		}
 	}
 	 
 	});
@@ -257,6 +273,7 @@ function injectCustomElements() {
         `;
         document.body.insertBefore(injectionContainer, document.body.firstChild);
     }
+
 
 
 }

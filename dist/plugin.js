@@ -1,3 +1,4 @@
+exports.repo = "SteliosLL/Takeback-reborn-hfs-theme"
 // Statically parsed JSON configuration
 exports.description = "The Takeback theme from the classic HFS2[UNDER DEVELOPMENT]"
 exports.version = 1
