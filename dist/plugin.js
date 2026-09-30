@@ -1,5 +1,5 @@
 // Statically parsed JSON configuration
-exports.description = "Takeback Theme converted for HFS3"
+exports.description = "The Takeback theme from the classic HFS2"
 exports.version = 1
 exports.apiRequired = 13.4 // Standard API level for HFS3 plugins
 exports.isTheme = true      // Tells HFS3 to disable other active themes when loaded
