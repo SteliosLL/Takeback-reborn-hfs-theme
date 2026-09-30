@@ -1,0 +1,455 @@
+body {
+    margin: 0;
+    font-family: 'Takeback-Define-Font', 'Monda', sans-serif;
+    background-color: black;
+    font-size: 1.1em;
+    color: white;
+}
+
+html, body {
+    scrollbar-gutter: stable;
+}
+
+.takeback-reborn-mod{
+    text-align: center !important;
+}
+
+.animator-show { transform: inherit; }
+.animator-hide { transform: scaleY(0); }
+
+.background {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: center / cover;
+    background-image:
+        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+        radial-gradient(white, rgba(255,255,255,.08) 3px, transparent 60px),
+        radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+    background-size: 550px 550px, 350px 350px, 250px 250px, 950px 950px, 150px 150px;
+    background-position: 0 0, 40px 60px, 130px 270px, 640px 240px, 70px 100px;
+    z-index: -2;
+}
+.background-image {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: center / cover;
+    background-image: url('{.!_background_image.}');
+    background-size: 550px 550px, 350px 350px, 250px 250px, 950px 950px, 150px 150px;
+    background-position: 0 0, 40px 60px, 130px 270px, 640px 240px, 70px 100px;
+    z-index: -2;
+}
+.background-mask {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+h1 {
+    font-size: 1.8em;
+}
+section#tooltip {
+    position: fixed;
+    bottom: 3.6em;
+    width: 100%;
+    min-height: 2em;
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+a:link, a:visited {
+    color: white;
+    background-color: transparent;
+}
+a:hover {
+    color: #333333;
+    background-color: white;
+}
+a:active {
+    color: white;
+    background-color: transparent;
+    text-shadow: 0 0 4px white;
+}
+a {
+    transition: all 0.3s;
+    text-decoration: none;
+}
+a.invert:link, a.invert:visited {
+    color: #333333;
+    background-color: white;
+}
+a.invert:hover {
+    color: white;
+    background-color: transparent;
+    border: 1px solid currentColor;
+}
+a.invert:active {
+    color: white;
+    background-color: transparent;
+    text-shadow: 0 0 4px white;
+}
+a.invert {
+    transition: all 0.3s;
+    text-decoration: none;
+    border: 1px solid transparent;
+    padding: 0 0.1em;
+}
+hr, .linebottom {
+    margin: 0;
+    border-bottom: 1px solid white;
+}
+#dialog {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: opacity 0.6s;
+}
+.dialog {
+    font-size: 0.9em !important;
+    position: fixed;
+    width: 60%;
+    left: 20%;
+    top: 33%;
+    border: 1px solid currentColor;
+    border-radius: 0 !important;
+    
+}
+
+
+
+
+
+/* Force semi-transparency on HFS3 dialogs and inner surfaces */
+dialog,
+.dialog,
+:root .dialog,
+:root .theme-dark .dialog,
+:root dialog {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    --bg: rgba(0, 0, 0, 0.75) !important;
+    --surface: rgba(0, 0, 0, 0.75) !important;
+    --surface-1: rgba(0, 0, 0, 0.75) !important;
+    --surface-2: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Optional: Make the dark overlay backdrop semi-transparent */
+dialog::backdrop,
+#dialog {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+
+/* 1. Opening Animation: Expands out from center */
+@keyframes zipIn {
+    0% {
+        transform: scaleY(0);
+        transform-origin: center center;
+        opacity: 0;
+    }
+    100% {
+        transform: scaleY(1);
+        transform-origin: center center;
+        opacity: 1;
+    }
+}
+
+/* 2. Closing Animation: Collapses into center */
+@keyframes zipOut {
+    0% {
+        transform: scaleY(1);
+        transform-origin: center center;
+        opacity: 1;
+    }
+    100% {
+        transform: scaleY(0);
+        transform-origin: center center;
+        opacity: 0;
+    }
+}
+
+/* Apply opening animation */
+dialog,
+.dialog,
+.animator-show {
+    transform-origin: center center !important;
+    animation: zipIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+/* Apply closing animation */
+dialog.is-closing,
+.dialog.is-closing,
+.animator-hide {
+    transform-origin: center center !important;
+    animation: zipOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+
+
+.dialog .prompt-input {
+    width: 12em;
+    font-size: 1.1em;
+    height: 1em;
+    border: 1px solid currentColor;
+}
+@media (max-width: 950px) {
+    section#tooltip {
+        bottom: unset;
+        top: 1.8em;
+    }
+}
+
+
+
+/* Base styling: Crisp white background & sharp corners */
+input.takeback-textbox {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-radius: 0px !important; /* Sharp 90-degree corners */
+    border: 1px solid #ffffff !important;
+    padding: 8px 12px;
+    outline: none !important; /* Kills any host theme outlines */
+    box-shadow: none !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+}
+
+/* Chrome/Safari browser autofill override */
+input.takeback-textbox:-webkit-autofill,
+input.takeback-textbox:-webkit-autofill:hover, 
+input.takeback-textbox:-webkit-autofill:focus {
+    -webkit-text-fill-color: #000000 !important;
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Single-rule focus effect: Eliminates double-line inheritance */
+input.takeback-textbox:focus,
+input.takeback-textbox:focus-visible {
+    background-color: #ffffff !important;
+    border-color: #000000 !important;
+    outline: 0 !important;
+    outline-style: none !important;
+    
+    /* Pure CSS layered shadow: 
+       Layer 1: Inner black line
+       Layer 2: Middle dark gap
+       Layer 3: Single outer white ring */
+    box-shadow: 
+        inset 0 0 0 1px #000000,
+        0 0 0 2px #000000,
+        0 0 0 4px #ffffff !important;
+}
+
+
+
+
+
+/* Apply the exact a.invert styles to HFS3's dialog close button */
+.dialog-closer,
+:root .dialog-closer,
+:root .theme-dark .dialog-closer {
+    /* Layout & Box Sizing */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    top: 0.3em !important;
+    right: 0.5em !important;
+    
+    /* Size adjustments */
+    font-size: 1.1em !important;
+    padding: 0.2em 0.5em !important;
+    min-width: 1.5em !important;
+    height: 1.5em !important;
+    box-sizing: border-box !important;
+    
+    /* Force sharp rectangular shape */
+    border-radius: 0 !important;
+    clip-path: none !important;
+
+    /* Reset default image/hiding properties */
+    background-image: none !important;
+    text-indent: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    cursor: pointer !important;
+
+    /* Base a.invert styling */
+    color: #333333 !important;
+    background-color: white !important;
+    border: 1px solid transparent !important;
+    text-decoration: none !important;
+    transition: all 0.3s !important;
+    font-family: inherit !important;
+    line-height: 1 !important;
+}
+
+/* Insert the "X" text inside the button */
+.dialog-closer::before {
+    display: inline-block;
+    font-weight: bold;
+}
+
+/* Hover state: a.invert:hover */
+.dialog-closer:hover,
+:root .dialog-closer:hover,
+:root .theme-dark .dialog-closer:hover {
+    color: white !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 1px solid currentColor !important;
+}
+
+/* Active state: a.invert:active */
+.dialog-closer:active,
+:root .dialog-closer:active,
+:root .theme-dark .dialog-closer:active {
+    color: white !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    text-shadow: 0 0 4px white !important;
+}
+
+.dialog-icon {
+    background-color: transparent !important;
+    border: 1px solid white !important;
+    border-radius: 0 !important;
+    padding: 0.2em !important;
+    margin-left: 0.3em !important;
+    margin-top: 0.3em !important;
+
+    /* Center background-image icons */
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+
+    /* Center inline SVG or child elements */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+}
+
+/* All buttons base state (White background, dark text, sharp rectangular corners) */
+button {
+    color: #333333 !important;
+    background-color: white !important;
+    background-image: none !important;
+    border: 1px solid transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: all 0.3s !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+/* Hover state (Flips to transparent background, white text + border) */
+button:hover {
+    color: white !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 1px solid currentColor !important;
+}
+
+/* Active/click state */
+button:active {
+    color: white !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    text-shadow: 0 0 4px white !important;
+}
+
+/* 1. Standard / Firefox syntax */
+* {
+    scrollbar-color: white transparent; /* Thumb: white, Track: transparent */
+    scrollbar-width: auto;             /* Options: auto | thin */
+}
+
+/* 2. WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 10px;                       /* Scrollbar width */
+    height: 10px;                      /* Horizontal scrollbar height */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;           /* Track background */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: white;           /* White scrollbar thumb */
+    border-radius: 0;                  /* Sharp rectangular corners */
+    border: 1px solid rgba(0, 0, 0, 0.2); /* Optional subtle border for light backgrounds */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #e0e0e0;         /* Slightly darker white on hover */
+}
+
+/* Customizes the item when hovered inside the dropdown */
+select option:hover,
+select option:focus {
+  background-color: #ffffff !important;
+  color: #333333 !important; /* Ensures text stays readable on white */
+}
+
+
+
+/* Custom Inverted Checkbox Styles for HFS3 */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 1.2em !important;
+  height: 1.2em !important;
+  border: 1px solid var(--text-high-contrast, #fff) !important;
+  border-radius: 0 !important; /* Sharp rectangular box matching inverted links/buttons */
+  background-color: transparent !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  transform: none !important; /* Overrides stock transform: scale(1.7) */
+  transition: all 0.2s ease !important;
+  
+  /* Grid centering ensures the checkmark stays centered at any size */
+  display: inline-grid !important;
+  place-content: center !important;
+}
+
+/* Checked state: Inverts to white background with dark checkmark */
+input[type="checkbox"]:checked {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+/* Custom checkmark indicator using CSS pseudo-element */
+input[type="checkbox"]:checked::after {
+  content: "" !important;
+  width: 0.3em !important;
+  height: 0.6em !important;
+  border: solid #333333 !important; /* Dark checkmark color */
+  border-width: 0 2px 2px 0 !important;
+  transform: rotate(45deg) translate(-10%, -10%) !important;
+}
+
+/* Hover state for feedback */
+input[type="checkbox"]:hover {
+  border-color: #ffffff !important;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Focus state for keyboard accessibility */
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--focus-color, #fff) !important;
+  outline-offset: 2px !important;
+}
