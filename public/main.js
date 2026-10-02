@@ -8,15 +8,26 @@ let currentPath = location.pathname;
 
 function loadScript(src) {
     return new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${src}"]`)) return resolve();
+        if (window.Artplayer) return resolve();
+
+        const existingScript = document.querySelector(`script[src="${src}"]`);
+        if (existingScript) {
+            if (existingScript.dataset.loaded === 'true') return resolve();
+            existingScript.addEventListener('load', resolve);
+            existingScript.addEventListener('error', reject);
+            return;
+        }
+
         const script = document.createElement('script');
         script.src = src;
-        script.onload = resolve;
+        script.onload = () => {
+            script.dataset.loaded = 'true';
+            resolve();
+        };
         script.onerror = reject;
         document.head.appendChild(script);
     });
 }
-
 // ==========================================
 // Generic Live File View Window Module
 // ==========================================
@@ -136,7 +147,9 @@ const HFS_ArtPlayer = {
 
         HFS_LiveView.show(title, mountPoint, () => this.destroy());
 
-        await loadScript('https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js');
+		//load artplayer script (USELESS)
+       // const localScriptUrl = HFS.getPluginUrl ? HFS.getPluginUrl('artplayer.js') : 'artplayer.js';
+		//await loadScript(localScriptUrl);
 
         const isAudio = /\.(mp3|wav|ogg|aac|m4a|flac|opus)$/i.test(title);
         let subUrl = '';

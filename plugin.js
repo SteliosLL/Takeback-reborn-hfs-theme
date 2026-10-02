@@ -14,6 +14,7 @@ exports.frontend_css = [
 exports.frontend_js = [
     'main.js',
     'takeback-general-main.js',
+    'artplayer.js',
 	'takeback-filelist-main.js'
 ]
 
