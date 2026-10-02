@@ -91,15 +91,87 @@
     box-sizing: border-box;
 }
 
-.part1 a[href*="sort=n"] {
+/* Target "Item" link: takes full available length & holds internal items inline */
+.part1 #sortItem {
     flex-grow: 1;
+    display: inline-flex;
+    align-items: center;
     justify-content: flex-start;
+    gap: 1.5em; /* Controls spacing between "Item" label and "📸 Photo Thumbnails" */
 }
 
-.part1 a[href*="sort=!t"] {
-    justify-content: flex-end;
-    white-space: nowrap;
+/* Nested Thumbnail Button styling inside #sortItem */
+.part1 #sortItem #showthumb {
+    padding: 0;
+    background: transparent !important;
+    height: auto;
 }
+
+
+
+.part1 #sortLastModified {
+    justify-content: center;
+    white-space: nowrap;
+    width: clamp(100px, 20vw, 190px); 
+}
+
+.part1 #sortSize {
+    justify-content: center;
+    white-space: nowrap;
+    width: clamp(40px, 20vw, 70px); 
+}
+
+.list-wrapper.thumb-mode ul.dir li,
+.list-wrapper.thumb-mode .file {
+    height: auto !important;
+    min-height: 80px; /* Optional minimum height for thumbnail rows */
+    align-items: center;
+}
+
+/* Constrain thumbnail image sizes while preserving row layout */
+.list-wrapper.thumb-mode .file-thumb-img {
+    width: 80px;          /* Adjust width as needed */
+    height: 80px;         /* Adjust height as needed */
+    object-fit: cover;    /* Prevents image distortion */
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+/* Dynamic scaling: full-width on narrow screens, proportional margin on wider monitors */
+#files-dropper,
+.list-wrapper {
+    /* Takes 85% of screen width, but caps at 100% so it touches borders on narrow displays */
+    width: min(100%, 65vw) !important;
+    max-width: none !important;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Force zero horizontal padding on narrow screens so elements touch the edge */
+@media (max-aspect-ratio: 4/3), (max-width: 768px) {
+    #files-dropper,
+    .list-wrapper {
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+
+
+
+
+
+
+
+ul.dir li.folder,
+ul.dir li.file {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
 /* 2. Folder list fixes: prevent menu button overlap */
 ul.dir {
     list-style: none;
@@ -152,12 +224,6 @@ ul.dir li.folder:hover {
     outline-offset: -2px;
 }
 
-/* Keep sharp outline when hovering the row */
-ul.dir li.folder:hover {
-    background-color: transparent;
-    outline: 2px solid #ffffff;
-    outline-offset: -2px;
-}
 
 /* Make text visible (black) when hovering directly over the link with the white background */
 ul.dir li.folder a:hover {
@@ -175,6 +241,9 @@ ul.dir li.folder:hover .entry-ts,
 ul.dir li.folder:hover .popup-menu-button {
     color: #ffffff;
 }
+
+
+
 
 
 
@@ -317,15 +386,8 @@ video.lyrics {
     }
 }
 
-/* Unknown File */
-td a::before {
-    content: "\1f4c4";
-    color: #BCC;
-    display: inline-block;
-    position: relative;
-    width: 1.75em;
-    text-align: center;
-}
+
+
 
 /* Other */
 td a[href$=";"i]::before,    /* javascript: ...; */
@@ -334,137 +396,6 @@ td a[href*="?"i]::before {
     content: none;
 }
 
-
-/* Working Picture (Photoshop & GIMP) */
-a[href$=".psd"i]::before,
-a[href$=".xcf"i]::before {
-    content: "📸";
-    color: #5AE
-}
-
-/* Audio/Music */
-a[href$=".mp3"i]::before,
-a[href$=".aac"i]::before,
-a[href$=".m4a"i]::before,
-a[href$=".wav"i]::before,
-a[href$=".ogg"i]::before {
-    content: "\1f50a\FE0E";
-    color: green
-}
-
-/* Video */
-a[href$=".mp4"i]::before,
-a[href$=".avi"i]::before,
-a[href$=".webm"i]::before,
-a[href$=".ogv"i]::before,
-a[href$=".flv"i]::before,
-a[href$=".mkv"i]::before {
-    content: "\1f4fa";
-    color: teal
-}
-
-
-/* Installation Pack */
-a[href$=".msi"i]::before,
-a[href$=".tar.gz"i]::before,
-a[href$=".deb"i]::before,
-a[href$=".rpm"i]::before {
-    content: "📦";
-    color: brown
-}
-
-/* Executable/Script */
-a[href$=".exe"i]::before,
-a[href$=".vbs"i]::before,
-a[href$=".bat"i]::before,
-a[href$=".sh"i]::before,
-a[href$=".ps1"i]::before,
-a[href$=".pyc"i]::before,
-a[href$=".apk"i]::before {
-    content: "\1f537";
-    color: #5AE
-}
-
-/* Code */
-a[href$=".c"i]::before,
-a[href$=".cpp"i]::before,
-a[href$=".h"i]::before,
-a[href$=".cxx"i]::before,
-a[href$=".gcc"i]::before,
-a[href$=".py"i]::before,
-a[href$=".js"i]::before {
-    content: "⌨";
-    color: yellow;
-}
-
-/* Working Document */
-a[href$=".rtf"i]::before,
-a[href$=".doc"i]::before,
-a[href$=".docx"i]::before,
-a[href$=".odt"i]::before,
-a[href$=".xls"i]::before,
-a[href$=".xlsx"i]::before,
-a[href$=".ods"i]::before,
-a[href$=".ppt"i]::before,
-a[href$=".pptx"i]::before,
-a[href$=".odp"i]::before {
-    content: "📝";
-    color: gray;
-}
-
-/* E-Books */
-a[href$=".epub"i]::before,
-a[href$=".pdf"i]::before {
-    content: "📕";
-    color: red;
-}
-
-/* Other Text */
-a[href$=".txt"i]::before,
-a[href$=".ini"i]::before,
-a[href$=".htm"i]::before,
-a[href$=".html"i]::before,
-a[href$=".cfg"i]::before,
-a[href$=".json"i]::before,
-a[href$=".m3u"i]::before,
-a[href$=".m3u8"i]::before,
-a[href$=".lrc"i]::before {
-    content: "📑";
-    color: thistle;
-}
-
-/* Flash */
-a[href$=".swf"i]::before {
-    content: "⚡";
-    color: gold;
-}
-
-/* Icon */
-a[href$=".ico"i]::before {
-    content: "🥚";
-    color: wheat;
-}
-
-/* (Data) Image */
-a[href$=".iso"i]::before,
-a[href$=".img"i]::before,    /* '.img' is a floppy💾 image💿 */
-a[href$=".dda"i]::before {
-    content: "💿";
-    color: white;
-}
-
-/* Link */
-table#files a[href^="ftp://"]::before,
-table#files a[href^="file://"]::before,
-table#files a[href^="tcp://"]::before,
-table#files a[href^="udp://"]::before,
-table#files a[href^="rtmp://"]::before,
-table#files a[href^="rtsp://"]::before,
-table#files a[href^="http://"]::before,
-table#files a[href^="https://"]::before {
-    content: "🌎";
-    color: #5AE
-}
 
 @media (min-width:950px) {
     ::-webkit-scrollbar {

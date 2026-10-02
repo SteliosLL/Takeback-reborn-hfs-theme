@@ -105,48 +105,8 @@ hr, .linebottom {
     margin: 0;
     border-bottom: 1px solid white;
 }
-#dialog {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    transition: opacity 0.6s;
-}
-.dialog {
-    font-size: 0.9em !important;
-    position: fixed;
-    width: 60%;
-    left: 20%;
-    top: 33%;
-    border: 1px solid currentColor;
-    border-radius: 0 !important;
-    
-}
 
 
-
-
-
-/* Force semi-transparency on HFS3 dialogs and inner surfaces */
-dialog,
-.dialog,
-:root .dialog,
-:root .theme-dark .dialog,
-:root dialog {
-    background-color: rgba(0, 0, 0, 0.75) !important;
-    background: rgba(0, 0, 0, 0.75) !important;
-    --bg: rgba(0, 0, 0, 0.75) !important;
-    --surface: rgba(0, 0, 0, 0.75) !important;
-    --surface-1: rgba(0, 0, 0, 0.75) !important;
-    --surface-2: rgba(0, 0, 0, 0.75) !important;
-}
-
-/* Optional: Make the dark overlay backdrop semi-transparent */
-dialog::backdrop,
-#dialog {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-}
 
 
 /* 1. Opening Animation: Expands out from center */
@@ -176,38 +136,6 @@ dialog::backdrop,
         opacity: 0;
     }
 }
-
-/* Apply opening animation */
-dialog,
-.dialog,
-.animator-show {
-    transform-origin: center center !important;
-    animation: zipIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-}
-
-/* Apply closing animation */
-dialog.is-closing,
-.dialog.is-closing,
-.animator-hide {
-    transform-origin: center center !important;
-    animation: zipOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-}
-
-
-
-.dialog .prompt-input {
-    width: 12em;
-    font-size: 1.1em;
-    height: 1em;
-    border: 1px solid currentColor;
-}
-@media (max-width: 950px) {
-    section#tooltip {
-        bottom: unset;
-        top: 1.8em;
-    }
-}
-
 
 
 /* Base styling: Crisp white background & sharp corners */
@@ -252,7 +180,100 @@ input.takeback-textbox:focus-visible {
 }
 
 
+#dialog {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: opacity 0.6s;
+}
+/* Base styles for ALL dialogs (defaults to width: 50%) */
+.dialog {
+    font-size: 0.9em !important;
+    position: fixed;
+    width: 40%;
+    top: auto; 
+    left: auto;
 
+    /* remove the bottom constraint that squishes the dialog */
+    bottom: auto !important;
+    height: auto !important;
+    
+    border: 1px solid currentColor;
+    border-radius: 0 !important;
+}
+
+/* Specific override ONLY for file dialogs */
+.file-dialog > .dialog {
+    width: 20%;
+    top: auto; 
+    left: auto;
+}
+
+/* 1. Base animator states (keeps tooltips smooth without flickering) */
+.animator-show {
+    transform: scaleY(1);
+    opacity: 1;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.animator-hide {
+    transform: scaleY(0);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+/* 2. Keyframe animations applied strictly to dialogs */
+dialog,
+.dialog {
+    transform-origin: center center;
+    animation: zipIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+dialog.is-closing,
+.dialog.is-closing,
+.dialog.animator-hide {
+    transform-origin: center center;
+    animation: zipOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
+.dialog .prompt-input {
+    width: 12em;
+    font-size: 1.1em;
+    height: 1em;
+    border: 1px solid currentColor;
+}
+@media (max-width: 950px) {
+    section#tooltip {
+        bottom: unset;
+        top: 1.8em;
+    }
+}
+
+
+
+
+/* Force semi-transparency on HFS3 dialogs and inner surfaces */
+dialog,
+.dialog,
+:root .dialog,
+:root .theme-dark .dialog,
+:root dialog {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    --bg: rgba(0, 0, 0, 0.75) !important;
+    --surface: rgba(0, 0, 0, 0.75) !important;
+    --surface-1: rgba(0, 0, 0, 0.75) !important;
+    --surface-2: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Optional: Make the dark overlay backdrop semi-transparent */
+dialog::backdrop,
+#dialog {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
 
 
 .dialog-closer,
@@ -316,13 +337,6 @@ input.takeback-textbox:focus-visible {
     border: none !important;
     text-shadow: none !important;
 }
-
-
-
-
-
-
-
 
 
 
@@ -463,7 +477,253 @@ input[type="checkbox"]:focus-visible {
   outline-offset: 2px !important;
 }
 
+
+#menu-panel-buttons {
+    margin-right: 15px !important; /* Increase or decrease pixels to adjust the gap */
+}
+
+#menu-panel-buttons {
+    position: relative;
+    top: -2px; /* Adjust pixel value as needed */
+    display: inline-flex;
+    align-items: center;
+    gap: 2px; 
+}
+
+
+
+/* ==========================================
+   Generic Live File View Window
+   ========================================== */
+
+#live-view-root {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 660px;
+    height: 375px;
+    max-width: 100vw;
+    max-height: 100vh;
+    /* Uses exact same opacity as your Takeback .dialog styles */
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    border: 1px solid #ffffff;
+    z-index: 99999;
+    display: none;
+    flex-direction: column;
+    box-sizing: border-box;
+    font-family: 'Takeback-Define-Font', 'Monda', sans-serif;
+    border-radius: 0 !important;
+}
+
+.live-view-header {
+    position: relative;
+    width: 100%;
+    height: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    color: #ffffff;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ffffff;
+    font-size: 0.9em;
+}
+
+.live-view-header .title-wrapper {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 2.5em; /* Clears space for [X] */
+}
+
+.live-view-header .arrow {
+    position: relative;
+    margin-right: 6px;
+    color: #ffffff;
+}
+
+.live-view-header .arrow::after {
+    content: '>>';
+    font-style: italic;
+}
+
+.live-view-title {
+    color: #00ffff;
+    font-weight: normal;
+    font-size: 1.1em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#live-view-container {
+    width: 100%;
+    height: calc(100% - 32px);
+    background: transparent !important; /* Lets content dictate its own background */
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styled Readonly Text Area for Text Files */
+.live-view-textbox {
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    resize: none !important;
+    font-family: monospace, sans-serif !important;
+    font-size: 0.8em !important; /* Made font smaller (was 0.95em) */
+    border: none !important;
+    outline: none !important;
+    padding: 8px !important;
+    color: white !important;
+    background-color: #000000 !important;
+}
+
+@media (max-width: 950px) {
+    #live-view-root {
+        width: 100%;
+        height: 300px;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.live-view-error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #ffffff;
+    font-size: 0.9em;
+    padding: 20px;
+    text-align: center;
+}
+
+@media (max-width: 950px) {
+    #live-view-root {
+        width: 100%;
+        height: 320px;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.live-view-header {
+    position: relative;
+    width: 100%;
+    height: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ffffff;
+    font-size: 0.9em;
+}
+
+/* Gives room on the left so '>>' doesn't clip against the border */
+.live-view-header .title-wrapper {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 4px; 
+    margin-right: 2.5em; /* Clears space for [X] */
+}
+
+/* Nudges the arrow icon slightly right */
+.live-view-header .arrow {
+    position: relative;
+    margin-right: 8px;
+    color: #ffffff;
+}
+
+/* Vertically centers the [X] close button inside the live view header */
+.live-view-header .dialog-closer {
+    position: absolute !important;
+    top: 50% !important;
+    right: 0.5em !important;
+    transform: translateY(-10%) !important;
+}
+
+#live-view-container {
+    width: 100%;
+    height: calc(100% - 32px);
+    background: #000000;
+    overflow: hidden;
+    position: relative;
+    display: flex;             /* Enables flex centering inside the main view container */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Image viewer wrapper with customized opacity */
+.live-view-image-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    /* Adjust opacity here: 0.85 (85% opaque) or 0.9 (90% opaque) */
+    background: rgba(0, 0, 0, 0.70) !important;
+    background-color: rgba(0, 0, 0, 0.70) !important;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+
+
+.live-view-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: auto;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Exact MMP sizing rules applied to live-view-btn */
+.live-view-btn {
+    font-size: .7em !important;
+    padding: .25em !important;
+    padding-right: .3em !important;
+    margin-left: .2em !important;
+    vertical-align: text-bottom !important;
+}
+
+.cant-open > .live-view-btn {
+    display: none !important;
+}
+
+/*-------SPECIFIC CASES--------*/
 #admin-link {
   all: unset !important;
   cursor: pointer !important; /* Optional: restores pointer cursor if it's a clickable element/button */
+}
+
+/* Forces all nested icons, labels, and divs inside .file-menu links to turn dark on hover */
+.file-menu a:hover * {
+    color: #333333 !important;
+}
+
+/* hidden <a> elements are used behind some buttons for some reason and with my global <a> styles they become visible and mess the UI up. target those <a> elements and unstyle them */
+.dialog-content a[tabindex="-1"] {
+    all: unset !important;
+    display: inline-block !important;
 }
