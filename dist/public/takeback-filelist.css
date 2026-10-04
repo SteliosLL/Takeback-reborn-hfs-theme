@@ -1,7 +1,11 @@
+/* ==========================================
+   Header and Search Navigation (.part0)
+   ========================================== */
 .search {
     display: inline;
     white-space: nowrap;
 }
+
 .search input[type="search"] {
     width: 17em;
     border-radius: 0;
@@ -10,33 +14,22 @@
     height: 2.6em;
 }
 
-/* useless
-.search input[type="submit"] {
-    width: 3em;
-    border-radius: 0;
-    border: 1px solid white;
-    background-color: white;
-    height: 2.6em;
-    transition: all 0.3s;
-}
-
-.searchbutton:hover {
-    background-color: transparent;
-}
- */
 .part0 h1 {
     font-size: 1.2em;
     font-weight: normal;
     margin: 0;
 }
+
 .part0 nav {
     width: 100%;
     text-align: left;
     border-bottom: 1px solid currentColor;
 }
+
 .part0 nav .right {
     float: right;
 }
+
 @keyframes blinkgreen {
     0% {
         color: green;
@@ -48,17 +41,20 @@
         color: green;
     }
 }
+
 .part0 p {
     margin: 0;
 }
+
 .part0 p a span {
     color: green;
     animation: blinkgreen 5s ease-in-out 0s infinite;
 }
 
+/* ==========================================
+   Header Controls Bar (.part1)
+   ========================================== */
 
-
-/* 1. Header fixes */
 .part1 {
     display: flex;
     justify-content: space-between;
@@ -71,12 +67,10 @@
     color: #000000;
     font-weight: bold;
     
-    /* Moves only the header visually up without touching surrounding elements */
     position: relative;
     top: -1px; 
 }
 
-/* Individual white header boxes */
 .part1 a,
 .part1 a.invert {
     background-color: #ffffff !important;
@@ -91,22 +85,58 @@
     box-sizing: border-box;
 }
 
-.part1 a[href*="sort=n"] {
+.part1 #sortItem {
     flex-grow: 1;
+    display: inline-flex;
+    align-items: center;
     justify-content: flex-start;
+    gap: 1.5em;
 }
 
-.part1 a[href*="sort=!t"] {
-    justify-content: flex-end;
-    white-space: nowrap;
+.part1 #sortItem #showthumb {
+    padding: 0;
+    background: transparent !important;
+    height: auto;
 }
-/* 2. Folder list fixes: prevent menu button overlap */
+
+.part1 #sortLastModified {
+    justify-content: center;
+    white-space: nowrap;
+    width: clamp(100px, 20vw, 190px); 
+}
+
+.part1 #sortSize {
+    justify-content: center;
+    white-space: nowrap;
+    width: clamp(40px, 20vw, 70px); 
+}
+
+/* ==========================================
+   File and Folder List Container
+   ========================================== */
+
+/* Dynamic scaling full-width on narrow screens, proportional margin on wider monitors */
+#files-dropper,
+.list-wrapper {
+    width: min(100%, 65vw) !important;
+    max-width: none !important;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
 ul.dir {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
+ul.dir li.folder,
+ul.dir li.file {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* Folder and file list layout fixes */
 ul.dir li.folder {
     display: flex;
     justify-content: space-between;
@@ -114,28 +144,38 @@ ul.dir li.folder {
     padding: 4px 8px;
 }
 
-/* Ensure link-wrapper uses inline-flex so items sit side-by-side */
-ul.dir li.folder .link-wrapper {
+ul.dir li.folder .link-wrapper,
+ul.dir li.file .link-wrapper {
     flex-grow: 1;
     display: inline-flex;
     align-items: center;
-    gap: 8px; /* Gap between folder name and menu button */
+    gap: 8px;
     overflow: hidden;
 }
 
-/* Ensure folder link layout stays inline */
-ul.dir li.folder .link-wrapper > a {
+/* make folder/file links stay inline and have NO underline */
+ul.dir li.folder .link-wrapper > a,
+ul.dir li.file .link-wrapper > a,
+ul.dir li a {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    text-decoration: none;
-    color: inherit;
+    text-decoration: none !important;
+    color: #ffffff;
     white-space: nowrap;
+}
+
+/* Make text visible (black) when hovering directly over the link with the white background */
+ul.dir li.folder a:hover,
+ul.dir li.file a:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    text-decoration: none !important;
 }
 
 /* Keep the popup button inline instead of breaking/overlapping */
 ul.dir li.folder .popup-menu-button {
-    position: static; /* Restores flow in case absolute positioning was breaking it */
+    position: static;
     flex-shrink: 0;
 }
 
@@ -145,113 +185,85 @@ ul.dir li.folder .entry-panel {
     margin-left: 12px;
 }
 
-/* Sharp rectangle outline on row hover */
-ul.dir li.folder:hover {
+ul.dir li.folder:hover,
+ul.dir li.file:hover {
     background-color: transparent;
     outline: 2px solid #ffffff;
     outline-offset: -2px;
 }
 
-/* Keep sharp outline when hovering the row */
-ul.dir li.folder:hover {
-    background-color: transparent;
-    outline: 2px solid #ffffff;
-    outline-offset: -2px;
-}
-
-/* Make text visible (black) when hovering directly over the link with the white background */
-ul.dir li.folder a:hover {
-    background-color: #ffffff !important;
-    color: #000000 !important; /* Changes text to black so it shows over the white box */
-}
-
-/* Default folder link color outside direct hover */
-ul.dir li.folder a {
-    color: #ffffff;
-}
-
-/* Keep secondary text white on row hover */
 ul.dir li.folder:hover .entry-ts,
 ul.dir li.folder:hover .popup-menu-button {
     color: #ffffff;
 }
 
+/* ==========================================
+   Thumbnail Mode Overrides
+   ========================================== */
+.list-wrapper.thumb-mode ul.dir li,
+.list-wrapper.thumb-mode .file {
+    height: auto !important;
+    min-height: 80px;
+    align-items: center;
+}
 
+/* Constrain thumbnail image sizes while preserving row layout */
+.list-wrapper.thumb-mode .file-thumb-img {
+    width: 80px; 
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 8px;
+    display: inline-block;
+}
 
-
+/* ==========================================
+   Bottom Containers & Mini Player Layout
+   ========================================== */
 .part2 .blank {
     height: 20em;
 }
-.part3 .left, .part3 .right {
+
+
+
+.part3 .left, 
+.part3 .right {
     position: fixed;
     bottom: 0em;
     display: inline-block;
 }
-.part3 .left #audioplayer, .part3 .right #preview {
-    background-color: rgba(0, 0, 0, 0.8);
-}
+
 .part3 .left {
     left: 0;
     text-align: left;
+    z-index: 9999 !important;
 }
+
 .part3 .right {
     right: 0;
     min-width: 24em;
 }
-.part3 .right #preview .close {
-    float: right;
-}
-.part3 .right #preview .close span {
-    color: #ff6666;
-}
-.part3 .right #preview .title {
-    text-align: left;
-}
-.part3 .right #preview video, .part3 .right #preview img {
-    max-height: 16em;
-}
-.part3 .right #preview iframe {
-    width: 24em;
-    height: 16em;
-    border: none;
-    background-color: white;
-}
-.part3 .right #preview .nopreview {
-    color: yellow;
-}
-.part3 .right #preview a span.menuitem {
-    color: rgb(255, 160, 96);
-    text-decoration: underline;
-    font-size: 0.9em;
-}
-.part3 .right #preview a.download span {
-    color: cyan;
+
+
+#audioplayer {
+    border-top: 1px solid #ffffff !important;
+    border-right: 1px solid #ffffff !important;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-
-
-
-
-
-
-
-
-
-
-.slideshow {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    background-color: black;
+#audioplayer a {
+    color: #00ffff !important;
+    padding: 0 5px !important;
 }
-.slideshow img {
-    height: 100%;
-    display: block;
-    transition: all 1s;
-    position: absolute;
+
+#audioplayer a:hover {
+    color: #333333 !important;
 }
+
+/* ==========================================
+   Animations & Indicators
+   ========================================== */
 @keyframes swing {
     0% {
         left: -0.5em;
@@ -263,39 +275,36 @@ ul.dir li.folder:hover .popup-menu-button {
         left: -0.5em;
     }
 }
+
 .arrow {
     position: relative;
     animation: swing 1s ease-in-out 0s infinite;
 }
+
 .arrow::after {
     content: '>>';
     font-style: italic;
 }
 
-section.lyrics {    /* Same as tooltip */
-    position: fixed;
-    bottom: 3.6em;
-    width: 100%;
-    height: 3.6em;
-    border-top: 1px solid currentColor;
-    border-bottom: 1px solid currentColor;
-    background-color: rgba(0, 0, 0, 0.8);
-    overflow: hidden;
+/* Dynamic links override */
+td a[href$=";"i]::before,    /* javascript: ...; */
+td a[href$=":"i]::before,    /* javascript: */
+td a[href*="?"i]::before {
+    content: none;
 }
-video::cue {
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    font-size: 26px;
-    font-family: 'Takeback-Define-Font', 'Monda', sans-serif;
-    overflow: visible;
-}
-video.lyrics {
-    width: 100%;
-    height: 20em;
-    position: absolute;
-    display: block;
-    left: 0;
-    bottom: 0;
+
+/* ==========================================
+   Responsive & Screen Breakpoints
+   ========================================== */
+
+/* Force zero horizontal padding on narrow screens so elements touch the edge */
+@media (max-aspect-ratio: 4/3), (max-width: 768px) {
+    #files-dropper,
+    .list-wrapper {
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 }
 
 @media (max-width: 950px) {
@@ -311,162 +320,10 @@ video.lyrics {
         min-width: unset;
         width: 100%;
     }
-    section.lyrics {
-        bottom: unset;
-        top: 1.8em;
-    }
 }
 
-/* Unknown File */
-td a::before {
-    content: "\1f4c4";
-    color: #BCC;
-    display: inline-block;
-    position: relative;
-    width: 1.75em;
-    text-align: center;
-}
-
-/* Other */
-td a[href$=";"i]::before,    /* javascript: ...; */
-td a[href$=":"i]::before,    /* javascript: */
-td a[href*="?"i]::before {
-    content: none;
-}
-
-
-/* Working Picture (Photoshop & GIMP) */
-a[href$=".psd"i]::before,
-a[href$=".xcf"i]::before {
-    content: "📸";
-    color: #5AE
-}
-
-/* Audio/Music */
-a[href$=".mp3"i]::before,
-a[href$=".aac"i]::before,
-a[href$=".m4a"i]::before,
-a[href$=".wav"i]::before,
-a[href$=".ogg"i]::before {
-    content: "\1f50a\FE0E";
-    color: green
-}
-
-/* Video */
-a[href$=".mp4"i]::before,
-a[href$=".avi"i]::before,
-a[href$=".webm"i]::before,
-a[href$=".ogv"i]::before,
-a[href$=".flv"i]::before,
-a[href$=".mkv"i]::before {
-    content: "\1f4fa";
-    color: teal
-}
-
-
-/* Installation Pack */
-a[href$=".msi"i]::before,
-a[href$=".tar.gz"i]::before,
-a[href$=".deb"i]::before,
-a[href$=".rpm"i]::before {
-    content: "📦";
-    color: brown
-}
-
-/* Executable/Script */
-a[href$=".exe"i]::before,
-a[href$=".vbs"i]::before,
-a[href$=".bat"i]::before,
-a[href$=".sh"i]::before,
-a[href$=".ps1"i]::before,
-a[href$=".pyc"i]::before,
-a[href$=".apk"i]::before {
-    content: "\1f537";
-    color: #5AE
-}
-
-/* Code */
-a[href$=".c"i]::before,
-a[href$=".cpp"i]::before,
-a[href$=".h"i]::before,
-a[href$=".cxx"i]::before,
-a[href$=".gcc"i]::before,
-a[href$=".py"i]::before,
-a[href$=".js"i]::before {
-    content: "⌨";
-    color: yellow;
-}
-
-/* Working Document */
-a[href$=".rtf"i]::before,
-a[href$=".doc"i]::before,
-a[href$=".docx"i]::before,
-a[href$=".odt"i]::before,
-a[href$=".xls"i]::before,
-a[href$=".xlsx"i]::before,
-a[href$=".ods"i]::before,
-a[href$=".ppt"i]::before,
-a[href$=".pptx"i]::before,
-a[href$=".odp"i]::before {
-    content: "📝";
-    color: gray;
-}
-
-/* E-Books */
-a[href$=".epub"i]::before,
-a[href$=".pdf"i]::before {
-    content: "📕";
-    color: red;
-}
-
-/* Other Text */
-a[href$=".txt"i]::before,
-a[href$=".ini"i]::before,
-a[href$=".htm"i]::before,
-a[href$=".html"i]::before,
-a[href$=".cfg"i]::before,
-a[href$=".json"i]::before,
-a[href$=".m3u"i]::before,
-a[href$=".m3u8"i]::before,
-a[href$=".lrc"i]::before {
-    content: "📑";
-    color: thistle;
-}
-
-/* Flash */
-a[href$=".swf"i]::before {
-    content: "⚡";
-    color: gold;
-}
-
-/* Icon */
-a[href$=".ico"i]::before {
-    content: "🥚";
-    color: wheat;
-}
-
-/* (Data) Image */
-a[href$=".iso"i]::before,
-a[href$=".img"i]::before,    /* '.img' is a floppy💾 image💿 */
-a[href$=".dda"i]::before {
-    content: "💿";
-    color: white;
-}
-
-/* Link */
-table#files a[href^="ftp://"]::before,
-table#files a[href^="file://"]::before,
-table#files a[href^="tcp://"]::before,
-table#files a[href^="udp://"]::before,
-table#files a[href^="rtmp://"]::before,
-table#files a[href^="rtsp://"]::before,
-table#files a[href^="http://"]::before,
-table#files a[href^="https://"]::before {
-    content: "🌎";
-    color: #5AE
-}
-
-@media (min-width:950px) {
+/* probably should delete all this crap */
+@media (min-width: 950px) {
     ::-webkit-scrollbar {
         width: 10px;
         height: 10px;
@@ -482,14 +339,10 @@ table#files a[href^="https://"]::before {
     ::-webkit-scrollbar-button:vertical:end:decrement,::-webkit-scrollbar-button:vertical:start:increment {
         display: none;
     }
-    ::-webkit-scrollbar-thumb:horizontal,::-webkit-scrollbar-thumb:vertical,::-webkit-scrollbar-track:horizontal,::-webkit-scrollbar-track:vertical {
+    ::-webkit-scrollbar-thumb:horizontal,::-webkit-scrollbar-thumb:vertical,
+    ::-webkit-scrollbar-track:horizontal,::-webkit-scrollbar-track:vertical {
         border-color: transparent;
         border-style: solid;
-    }
-    ::-webkit-scrollbar-track:vertical::-webkit-scrollbar-track:horizontal {
-        /* background-color: rgba(255,255,255,.2); */
-        -webkit-background-clip: padding-box;
-        background-clip: padding-box;
     }
     ::-webkit-scrollbar-thumb {
         min-height: 28px;
@@ -519,11 +372,16 @@ table#files a[href^="https://"]::before {
         background-color: rgba(0,0,0,.05);
         box-shadow: inset 1px 0 0 rgba(0,0,0,.14), inset -1px -1px 0 rgba(0,0,0,.07);
     }
-    .scrollbar-hover::-webkit-scrollbar,.scrollbar-hover::-webkit-scrollbar-button,
-    .scrollbar-hover::-webkit-scrollbar-thumb,.scrollbar-hover::-webkit-scrollbar-track {
+    .scrollbar-hover::-webkit-scrollbar,
+    .scrollbar-hover::-webkit-scrollbar-button,
+    .scrollbar-hover::-webkit-scrollbar-thumb,
+    .scrollbar-hover::-webkit-scrollbar-track {
         visibility: hidden;
     }
-    .scrollbar-hover:hover::-webkit-scrollbar,.scrollbar-hover:hover::-webkit-scrollbar-button,.scrollbar-hover:hover::-webkit-scrollbar-thumb,.scrollbar-hover:hover::-webkit-scrollbar-track {
+    .scrollbar-hover:hover::-webkit-scrollbar,
+    .scrollbar-hover:hover::-webkit-scrollbar-button,
+    .scrollbar-hover:hover::-webkit-scrollbar-thumb,
+    .scrollbar-hover:hover::-webkit-scrollbar-track {
         visibility: visible;
     }
 }

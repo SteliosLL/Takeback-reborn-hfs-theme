@@ -1,22 +1,4 @@
-var Helper = /** @class */ (function () {
-    function Helper() {
-    }
-    Helper.prototype.uniformURI = function (str) {
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-        return decodeURIComponent(str).replace(/#/g, '%23');
-    };
-    Helper.prototype.getFilename = function (path) {
-        return this.uniformURI(path.split('/').slice(-1)[0]);
-    };
-    Helper.prototype.getDirname = function (path) {
-        return this.uniformURI(path.split('/').slice(0, -1).join('/') + '/');
-    };
-    Helper.prototype.getPath = function (url) {
-        return this.uniformURI('/' + url.split('/').slice(3).join('/'));
-    };
-    return Helper;
-}());
-var helper = new Helper();
+//HFS2 HELPER REMOVED :(
 var Animator = /** @class */ (function () {
     function Animator(selector) {
         if (typeof selector == 'string') {
@@ -68,24 +50,41 @@ var Animator = /** @class */ (function () {
     };
     return Animator;
 }());
+
+
 function AnimatorConstructor(selector) { return new Animator(selector); }
 var $ = AnimatorConstructor;
 var TooltipManager = /** @class */ (function () {
     function TooltipManager() {
         var _this = this;
         this.elemTooltip = document.getElementById('tooltip');
-        document.querySelectorAll('*[data-tooltip]').forEach(function (element) {
-            element.addEventListener('mouseover', function () { return _this.show(element.getAttribute('data-tooltip')); });
-            element.addEventListener('mouseout', function () { return _this.hide(); });
+
+        // Delegate mouseover event to the document
+        document.addEventListener('mouseover', function (event) {
+            var target = event.target.closest('*[data-tooltip]');
+            if (target) {
+                _this.show(target.getAttribute('data-tooltip'));
+            }
+        });
+
+        // Delegate mouseout event to the document
+        document.addEventListener('mouseout', function (event) {
+            var target = event.target.closest('*[data-tooltip]');
+            if (target) {
+                _this.hide();
+            }
         });
     }
+
     TooltipManager.prototype.show = function (message) {
         this.elemTooltip.innerText = message;
         $(this.elemTooltip).show();
     };
+
     TooltipManager.prototype.hide = function () {
         $(this.elemTooltip).hide();
     };
+
     return TooltipManager;
 }());
 
@@ -106,7 +105,7 @@ var Dialog = /** @class */ (function () {
         this.sectionDialog = document.getElementById('dialog');
         this.elemDialog = document.createElement('div');
         $(this.elemDialog).hide();
-        this.elemDialog.classList.add('dialog');
+        this.elemDialog.classList.add('dialog', 'dialog-default-font');
         this.elemText = document.createElement('p');
         var hr = document.createElement('hr');
         this.elemActions = document.createElement('p');
