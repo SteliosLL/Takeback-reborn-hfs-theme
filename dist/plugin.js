@@ -1,5 +1,5 @@
 exports.repo = "SteliosLL/Takeback-reborn-hfs-theme"
-exports.description = "The Takeback theme from the classic HFS2[UNDER DEVELOPMENT]"
+exports.description = "The Takeback theme from the classic HFS2"
 exports.version = 1
 exports.apiRequired = 9.6
 exports.isTheme = true 
